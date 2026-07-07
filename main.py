@@ -8,7 +8,18 @@ if os.path.exists(venv_site_packages) and venv_site_packages not in sys.path:
     sys.path.insert(0, venv_site_packages)
 
 # Add parent directory of 'backend' to sys.path to resolve 'backend' package imports
-sys.path.insert(0, os.path.dirname(backend_dir))
+parent_dir = os.path.dirname(backend_dir)
+sys.path.insert(0, parent_dir)
+
+# Create a symlink named 'backend' pointing to the current directory if it is cloned as 'src' (e.g. on Render)
+if os.path.basename(backend_dir) != "backend":
+    try:
+        symlink_path = os.path.join(parent_dir, "backend")
+        if not os.path.exists(symlink_path):
+            os.symlink(backend_dir, symlink_path, target_is_directory=True)
+    except Exception as e:
+        # Silently pass if symlink creation is not permitted (e.g. on Windows without admin)
+        pass
 
 import uvicorn
 from fastapi import FastAPI
