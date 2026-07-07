@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+google-genai
+requests
+beautifulsoup4
+python-multipart
+pytest
